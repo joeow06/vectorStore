@@ -1,77 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickBooks Invoice Documentation</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
-        h1, h2, h3 { color: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        table, th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background: #f4f4f4; }
-    </style>
 </head>
 <body>
     <h1>QuickBooks Invoice Documentation</h1>
-    
     <h2>Overview</h2>
     <p>An Invoice represents a sales form where the customer pays for a product or service later.</p>
     
-    <h3>Business Rules</h3>
+    <h2>Business Rules</h2>
     <ul>
-        <li>An invoice must contain at least one Line Item (Sales Item or Inline Subtotal).</li>
+        <li>An invoice must contain at least one Line Item.</li>
         <li>CustomerRef is required.</li>
         <li>DocNumber is auto-generated if not provided.</li>
         <li>If ShipAddr or BillAddr are missing, QuickBooks will use the customer's saved address.</li>
-        <li>If importing multiple invoices and payments, sort them chronologically and batch-send them (10 per batch).</li>
-        <li>A taxable invoice is limited to 750 lines.</li>
     </ul>
     
     <h2>Invoice Attributes</h2>
-    
     <h3>Essential Fields</h3>
-    <table>
-        <tr><th>Attribute</th><th>Description</th></tr>
-        <tr><td>Id</td><td>Unique identifier for the invoice (Required for update).</td></tr>
-        <tr><td>Line Items</td><td>Individual transaction line items. Types: SalesItemLine, GroupLine, DescriptionOnlyLine, DiscountLine, SubTotalLine.</td></tr>
-        <tr><td>CustomerRef</td><td>Reference to the customer or job. Required.</td></tr>
-        <tr><td>SyncToken</td><td>Version number to prevent concurrent modifications. Required for updates.</td></tr>
-    </table>
+    <ul>
+        <li><b>Id:</b> Unique identifier for the invoice.</li>
+        <li><b>Line Items:</b> Individual transaction line items.</li>
+        <li><b>CustomerRef:</b> Reference to the customer or job.</li>
+        <li><b>SyncToken:</b> Version number for preventing concurrent modifications.</li>
+    </ul>
     
     <h3>Conditionally Required Fields</h3>
-    <table>
-        <tr><th>Attribute</th><th>Description</th></tr>
-        <tr><td>ShipFromAddr</td><td>Address where goods are shipped from. Required for accurate sales tax calculation if automated tax is enabled.</td></tr>
-        <tr><td>CurrencyRef</td><td>Currency of the transaction, required if multi-currency is enabled.</td></tr>
-        <tr><td>GlobalTaxCalculation</td><td>Specifies how tax is applied (TaxExcluded, TaxInclusive, NotApplicable).</td></tr>
-        <tr><td>DocNumber</td><td>Transaction reference number. Automatically generated unless overridden.</td></tr>
-        <tr><td>ProjectRef</td><td>Reference to a project linked to this invoice (Available from Minor Version 69).</td></tr>
-        <tr><td>BillEmail</td><td>Email address where the invoice is sent. Required if EmailStatus = NeedToSend.</td></tr>
-    </table>
+    <ul>
+        <li><b>ShipFromAddr:</b> Required for tax calculation if automated tax is enabled.</li>
+        <li><b>CurrencyRef:</b> Required if multi-currency is enabled.</li>
+        <li><b>DocNumber:</b> Transaction reference number.</li>
+    </ul>
     
-    <h2>Optional Fields</h2>
-    <table>
-        <tr><th>Attribute</th><th>Description</th></tr>
-        <tr><td>TxnDate</td><td>Date when the transaction occurred (YYYY/MM/DD format).</td></tr>
-        <tr><td>ShipDate</td><td>Delivery date for goods or services.</td></tr>
-        <tr><td>TrackingNum</td><td>Shipping provider tracking number.</td></tr>
-        <tr><td>PrintStatus</td><td>Invoice printing status (NotSet, NeedToPrint, PrintComplete).</td></tr>
-        <tr><td>SalesTermRef</td><td>Reference to the sales term (payment due conditions).</td></tr>
-        <tr><td>DepositToAccountRef</td><td>Account where the payment will be deposited.</td></tr>
-        <tr><td>AllowOnlineACHPayment</td><td>Allows payment via bank transfer (true/false).</td></tr>
-        <tr><td>DueDate</td><td>Date when the payment is due.</td></tr>
-        <tr><td>TotalAmt</td><td>Total invoice amount, including taxes.</td></tr>
-        <tr><td>InvoiceLink</td><td>Sharable link for online invoice payments (Available from Minor Version 36).</td></tr>
-    </table>
+    <h3>Optional Fields</h3>
+    <ul>
+        <li><b>TxnDate:</b> Date when the transaction occurred.</li>
+        <li><b>ShipDate:</b> Delivery date.</li>
+        <li><b>TrackingNum:</b> Shipping provider tracking number.</li>
+        <li><b>PrintStatus:</b> Invoice printing status.</li>
+    </ul>
     
     <h2>Invoice Actions</h2>
-    
     <h3>Creating an Invoice</h3>
-    <p>Minimum required fields:</p>
     <ul>
-        <li>CustomerRef (Customer ID)</li>
-        <li>Line Item (SalesItemLine, GroupLine, or DescriptionOnlyLine)</li>
+        <li>Minimum required fields: CustomerRef and at least one Line Item.</li>
     </ul>
     
     <h3>Deleting an Invoice</h3>
@@ -80,8 +52,7 @@
         <li>Unlink any associated transactions before deleting.</li>
     </ul>
     
-    <h2>Response Format for Invoice Creation</h2>
-    <p>Upon successful creation, QuickBooks returns the full invoice object, including:</p>
+    <h2>Response Format</h2>
     <ul>
         <li>Invoice ID</li>
         <li>CustomerRef</li>
@@ -89,14 +60,5 @@
         <li>Tax Details (if applicable)</li>
         <li>Invoice Status</li>
     </ul>
-    
-    <h2>Final Notes</h2>
-    <ul>
-        <li>Always verify required fields before sending data to QuickBooks.</li>
-        <li>Use SyncToken to prevent overwriting invoice changes.</li>
-        <li>Online payments must be enabled in QuickBooks preferences for ACH and credit card transactions.</li>
-    </ul>
-    
-    <p>This refactored document simplifies the key points of QuickBooks Invoice API for easy reference and implementation.</p>
 </body>
 </html>
