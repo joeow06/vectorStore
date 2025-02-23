@@ -1,0 +1,89 @@
+QuickBooks Invoice Documentation (Refactored for Readability)
+
+---
+
+## Overview
+An Invoice represents a sales form where the customer pays for a product or service later.
+
+### Business Rules
+- An invoice must contain at least one Line Item (Sales Item or Inline Subtotal).
+- CustomerRef is required.
+- DocNumber is auto-generated if not provided.
+- If ShipAddr or BillAddr are missing, QuickBooks will use the customer's saved address.
+- If importing multiple invoices and payments, sort them chronologically and batch-send them (10 per batch).
+- A taxable invoice is limited to 750 lines.
+
+---
+
+## Invoice Attributes
+
+### Essential Fields
+| Attribute | Description |
+|-----------|-------------|
+| Id | Unique identifier for the invoice (Required for update). |
+| Line Items | Individual transaction line items. Types: SalesItemLine, GroupLine, DescriptionOnlyLine, DiscountLine, SubTotalLine. |
+| CustomerRef | Reference to the customer or job. Required. |
+| SyncToken | Version number to prevent concurrent modifications. Required for updates. |
+
+---
+
+### Conditionally Required Fields
+| Attribute | Description |
+|-----------|-------------|
+| ShipFromAddr | Address where goods are shipped from. Required for accurate sales tax calculation if automated tax is enabled. |
+| CurrencyRef | Currency of the transaction, required if multi-currency is enabled. |
+| GlobalTaxCalculation | Specifies how tax is applied (TaxExcluded, TaxInclusive, NotApplicable). |
+| DocNumber | Transaction reference number. Automatically generated unless overridden. |
+| ProjectRef | Reference to a project linked to this invoice (Available from Minor Version 69). |
+| BillEmail | Email address where the invoice is sent. Required if EmailStatus = NeedToSend. |
+
+---
+
+## Optional Fields
+| Attribute | Description |
+|-----------|-------------|
+| TxnDate | Date when the transaction occurred (YYYY/MM/DD format). |
+| ShipDate | Delivery date for goods or services. |
+| TrackingNum | Shipping provider tracking number. |
+| PrintStatus | Invoice printing status (NotSet, NeedToPrint, PrintComplete). |
+| SalesTermRef | Reference to the sales term (payment due conditions). |
+| DepositToAccountRef | Account where the payment will be deposited. |
+| AllowOnlineACHPayment | Allows payment via bank transfer (true/false). |
+| DueDate | Date when the payment is due. |
+| TotalAmt | Total invoice amount, including taxes. |
+| InvoiceLink | Sharable link for online invoice payments (Available from Minor Version 36). |
+
+---
+
+## Invoice Actions
+
+### Creating an Invoice
+Minimum required fields:
+- CustomerRef (Customer ID)
+- Line Item (SalesItemLine, GroupLine, or DescriptionOnlyLine)
+
+### Deleting an Invoice
+- Requires Invoice.Id and SyncToken.
+- Unlink any associated transactions before deleting.
+
+---
+
+## Response Format for Invoice Creation
+Upon successful creation, QuickBooks returns the full invoice object, including:
+- Invoice ID
+- CustomerRef
+- TotalAmt
+- Tax Details (if applicable)
+- Invoice Status
+
+---
+
+## Final Notes
+- Always verify required fields before sending data to QuickBooks.
+- Use SyncToken to prevent overwriting invoice changes.
+- Online payments must be enabled in QuickBooks preferences for ACH and credit card transactions.
+
+---
+
+This refactored document simplifies the key points of QuickBooks Invoice API for easy reference and implementation.
+
