@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>QuickBooks Invoice Documentation</title>
 </head>
+
 <body>
     <h1>QuickBooks Invoice Documentation</h1>
+    <p>
+        <img src="randy.jpg" alt="Randy"
+            style="display:block;max-width:600px;width:100%;height:auto;margin:16px auto;" />
+    </p>
     <h2>Overview</h2>
     <p>An Invoice represents a sales form where the customer pays for a product or service later.</p>
-    
+
     <h2>Business Rules</h2>
     <ul>
         <li>An invoice must contain at least one Line Item.</li>
@@ -15,7 +21,7 @@
         <li>DocNumber is auto-generated if not provided.</li>
         <li>If ShipAddr or BillAddr are missing, QuickBooks will use the customer's saved address.</li>
     </ul>
-    
+
     <h2>Invoice Attributes</h2>
     <h3>Essential Fields</h3>
     <ul>
@@ -24,14 +30,14 @@
         <li><b>CustomerRef:</b> Reference to the customer or job.</li>
         <li><b>SyncToken:</b> Version number for preventing concurrent modifications.</li>
     </ul>
-    
+
     <h3>Conditionally Required Fields</h3>
     <ul>
         <li><b>ShipFromAddr:</b> Required for tax calculation if automated tax is enabled.</li>
         <li><b>CurrencyRef:</b> Required if multi-currency is enabled.</li>
         <li><b>DocNumber:</b> Transaction reference number.</li>
     </ul>
-    
+
     <h3>Optional Fields</h3>
     <ul>
         <li><b>TxnDate:</b> Date when the transaction occurred.</li>
@@ -39,19 +45,19 @@
         <li><b>TrackingNum:</b> Shipping provider tracking number.</li>
         <li><b>PrintStatus:</b> Invoice printing status.</li>
     </ul>
-    
+
     <h2>Invoice Actions</h2>
     <h3>Creating an Invoice</h3>
     <ul>
         <li>Minimum required fields: CustomerRef and at least one Line Item.</li>
     </ul>
-    
+
     <h3>Deleting an Invoice</h3>
     <ul>
         <li>Requires Invoice.Id and SyncToken.</li>
         <li>Unlink any associated transactions before deleting.</li>
     </ul>
-    
+
     <h2>Response Format</h2>
     <ul>
         <li>Invoice ID</li>
@@ -61,4 +67,5 @@
         <li>Invoice Status</li>
     </ul>
 </body>
+
 </html>
